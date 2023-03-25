@@ -5,6 +5,8 @@ const PORT = process.env.PORT || 3000;
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.use(express.json());
+
 
 /** global instance of our database */
 let db = new DB();
