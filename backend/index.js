@@ -20,19 +20,69 @@ async function initDB() {
 /** Return all todos. 
  *  Be aware that the db methods return promises, so we need to use either `await` or `then` here! 
  */
+app.get('/', (request, response) => response.redirect('/todos'));
+
 app.get('/todos', async (req, res) => {
     let todos = await db.queryAll();
     res.send(todos);
 });
 
 //
-// YOUR CODE HERE
-//
-// Implement the following routes:
-// GET /todos/:id
-// POST /todos
-// PUT /todos/:id
-// DELETE /todos/:id
+
+
+ 
+app.get('/todos/:id', (req, res) => {  
+    const id = parseInt(req.params['id'])  
+    for (let i=0; i<TODOS.length; i++) { 
+        if (TODOS[i].id === id){
+            res.send(TODOS[i])
+            break;         
+        }
+        }       
+    res.send(id + " ist nicht vorhanden")    
+})
+
+
+app.post('/todos', (req, res) => {
+    const input = req.body;
+    if (!input.id) {
+        res.status(400).send('Todo muss eine ID haben');
+        return;
+    }
+    for (let i=0; i<TODOS.length; i++) { 
+        if (TODOS[i].id === input.id){
+            res.status(409).send("Anlegen nicht möglich. ID schon vorhanden");
+            return;
+        }
+    }
+    TODOS.push(input);
+    res.send(TODOS);
+});
+
+app.put("/todos/:id", (req, res) => {
+    const id = parseInt(req.params['id'])
+    const input = req.body;
+    for (let i=0; i<TODOS.length; i++) { 
+        if (TODOS[i].id === id){
+            TODOS[i].title = input.title;
+            TODOS[i].due = input.due;
+            TODOS[i].status = input.status;
+            res.send(id + " wurde erfolgreich geändert") 
+        }
+        }       
+    res.send(id + " ist nicht vorhanden") 
+});
+
+app.delete("/todos/:id", (req, res) => {
+    const id = parseInt(req.params['id'])      
+    for (let i=0; i<TODOS.length; i++) { 
+        if (TODOS[i].id === id){
+            TODOS.splice(i, 1);
+            res.send(id + " wurde erfolgreich gelöscht")        
+        }
+        }       
+    res.send(id + " ist nicht vorhanden") 
+})
 
 
 initDB()
@@ -42,3 +92,10 @@ initDB()
         })
     })
 
+ app.listen(1337, () => {
+        console.log('Server is listening to https://dobo91-automatic-chainsaw-q44gw6rgw96c67-1337.preview.app.github.dev/');
+    }); 
+    
+app.listen(1234, () => {
+        console.log('Server is listening to https://dobo91-automatic-chainsaw-q44gw6rgw96c67-1337.preview.app.github.dev/');
+    }); 
