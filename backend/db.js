@@ -19,18 +19,50 @@ export default class DB {
     }
 
     queryById(id) {
-        // TODO: Implement queryById
+        return new Promise((resolve, reject) => {
+            collection.findOne({ _id: id }, (err, result) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
+            });
+          });
     }
 
     update(id, order) {
-        // TODO: Implement update
+        return new Promise((resolve, reject) => {
+            collection.updateOne({ _id: id }, { $set: order }, (err, result) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
+            });
+          });
     }
 
     delete(id) {
-        // TODO: Implement delete
+        return new Promise((resolve, reject) => {
+            collection.deleteOne({ _id: id }, (err, result) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
+            });
+          });
     }
 
     insert(order) {
-        // TODO: Implement insert
+        return new Promise((resolve, reject) => {
+            collection.insertOne(order, (err, result) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
+            });
+          });
     }
 }

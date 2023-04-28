@@ -33,58 +33,37 @@ app.get('/todos', async (req, res) => {
 
 
  
-app.get('/todos/:id', (req, res) => {  
-    const id = parseInt(req.params['id'])  
-    for (let i=0; i<TODOS.length; i++) { 
-        if (TODOS[i].id === id){
-            res.send(TODOS[i])
-            break;         
-        }
-        }       
-    res.send(id + " ist nicht vorhanden")    
-})
-
-
-app.post('/todos', (req, res) => {
-    const input = req.body;
-    if (!input.id) {
-        res.status(400).send('Todo muss eine ID haben');
-        return;
+app.get('/todos/:id', async (req, res) => {
+    const id = req.params.id;
+    const todo = await db.queryById(id);
+    if (todo) {
+      res.send(todo);
+    } else {
+      res.status(404).send("Todo not found");
     }
-    for (let i=0; i<TODOS.length; i++) { 
-        if (TODOS[i].id === input.id){
-            res.status(409).send("Anlegen nicht möglich. ID schon vorhanden");
-            return;
-        }
-    }
-    TODOS.push(input);
-    res.send(TODOS);
-});
+  });
 
-app.put("/todos/:id", (req, res) => {
-    const id = parseInt(req.params['id'])
-    const input = req.body;
-    for (let i=0; i<TODOS.length; i++) { 
-        if (TODOS[i].id === id){
-            TODOS[i].title = input.title;
-            TODOS[i].due = input.due;
-            TODOS[i].status = input.status;
-            res.send(id + " wurde erfolgreich geändert") 
-        }
-        }       
-    res.send(id + " ist nicht vorhanden") 
-});
 
-app.delete("/todos/:id", (req, res) => {
-    const id = parseInt(req.params['id'])      
-    for (let i=0; i<TODOS.length; i++) { 
-        if (TODOS[i].id === id){
-            TODOS.splice(i, 1);
-            res.send(id + " wurde erfolgreich gelöscht")        
-        }
-        }       
-    res.send(id + " ist nicht vorhanden") 
-})
+app.post('/todos', async (req, res) => {
+    const todo = req.body;
+    const result = await db.insert(todo);
+    res.send(result);
+  });
+
+
+app.put('/todos/:id', async (req, res) => {
+    const id = req.params.id;
+    const todo = req.body;
+    const result = await db.update(id, todo);
+    res.send(result);
+  });
+
+  
+  app.delete('/todos/:id', async (req, res) => {
+    const id = req.params.id;
+    const result = await db.delete(id);
+    res.send(result);
+  });
 
 
 initDB()
