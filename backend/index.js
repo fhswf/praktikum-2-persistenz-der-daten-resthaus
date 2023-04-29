@@ -36,11 +36,8 @@ app.get('/todos', async (req, res) => {
 app.get('/todos/:id', async (req, res) => {
     const id = req.params.id;
     const todo = await db.queryById(id);
-    if (todo) {
-      res.send(todo);
-    } else {
-      res.status(404).send("Todo not found");
-    }
+    res.send(todo);
+
   });
 
 
@@ -72,11 +69,3 @@ initDB()
             console.log(`Server listening on port ${PORT}`);
         })
     })
-
- app.listen(1337, () => {
-        console.log('Server is listening to https://dobo91-automatic-chainsaw-q44gw6rgw96c67-1337.preview.app.github.dev/');
-    }); 
-    
-app.listen(1234, () => {
-        console.log('Server is listening to https://dobo91-automatic-chainsaw-q44gw6rgw96c67-1337.preview.app.github.dev/');
-    }); 

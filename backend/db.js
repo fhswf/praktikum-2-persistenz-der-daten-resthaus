@@ -18,16 +18,9 @@ export default class DB {
         return collection.find().toArray();
     }
 
-    queryById(id) {
-        return new Promise((resolve, reject) => {
-            collection.findOne({ _id: id }, (err, result) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(result);
-              }
-            });
-          });
+    queryById(id) {      
+        return collection.findOne({ _id: id });
+
     }
 
     update(id, order) {
@@ -55,14 +48,6 @@ export default class DB {
     }
 
     insert(order) {
-        return new Promise((resolve, reject) => {
-            collection.insertOne(order, (err, result) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(result);
-              }
-            });
-          });
+            collection.insertOne(order)
     }
 }
